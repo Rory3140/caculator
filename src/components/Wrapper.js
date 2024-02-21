@@ -5,8 +5,7 @@ import "./Wrapper.css";
 
 const Wrapper = () => {
   let [num, setNum] = useState(0);
-  let [displayNum, setDisplayNum] = useState(0);
-  let [res, setRes] = useState("");
+  let [res, setRes] = useState(0);
   let [oper, setOper] = useState("");
 
   function onButtonClick(event) {
@@ -41,15 +40,13 @@ const Wrapper = () => {
 
   function resetClickHandler() {
     setNum(0);
-    setDisplayNum(0);
-    setRes("");
+    setRes(0);
     setOper("");
   }
 
   function invertClickHandler() {
     num = num * -1;
     setNum(num);
-    displayNumHandler(num);
   }
 
   function percentClickHandler() {
@@ -58,7 +55,6 @@ const Wrapper = () => {
       num = num.toExponential(9);
     }
     setNum(num);
-    displayNumHandler(num);
   }
 
   function operClickHandler(value) {
@@ -84,8 +80,10 @@ const Wrapper = () => {
         break;
     }
     setNum(0);
+    if (result.toString().length > 13) {
+      result = result.toExponential(9);
+    }
     setRes(result);
-    displayNumHandler(result);
     return result;
   }
 
@@ -99,7 +97,6 @@ const Wrapper = () => {
     if (!num.toString().includes(".")) {
       let newValue = num + ".";
       setNum(newValue);
-      displayNumHandler(newValue);
     }
   }
 
@@ -116,27 +113,13 @@ const Wrapper = () => {
         newValue = num + value;
       }
       newValue = Number(newValue);
-
       setNum(newValue);
-      displayNumHandler(newValue);
     }
-  }
-
-  function displayNumHandler(value) {
-    if (value.toString().includes(".")) {
-      value = parseFloat(value)
-        .toFixed(10)
-        .replace(/\.?0+$/, "");
-    }
-    if (value.toString().length > 13) {
-      value = value.toString().substring(0, 13);
-    }
-    setDisplayNum(value);
   }
 
   return (
     <div className="wrapper bg-dark-gray pa3 br3">
-      <Screen value={displayNum} />
+      <Screen value={num === 0 ? res : num} />
       <ButtonBox handleClick={onButtonClick} />
     </div>
   );
